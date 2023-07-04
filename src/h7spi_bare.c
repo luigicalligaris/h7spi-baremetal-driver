@@ -1596,8 +1596,8 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           MODIFY_REG(GPIOE->OSPEEDR, 0b11 <<  4, 0b11 <<  4);
           // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE2
           MODIFY_REG(GPIOE->PUPDR, 0b11 <<  4, 0b00 <<  4);
-          // GPIOE OTYPEDR: Set open drain = 0b1 to pin PE2
-          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  2, 0b1 <<  2);
+          // GPIOE OTYPEDR: Set push-pull output type = 0b0 to pin PE2
+          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  2, 0b0 <<  2);
           // GPIOE MODER: Set alternate mode = 0b10 to pins PE2
           MODIFY_REG(GPIOE->MODER, 0b11 <<  4, 0b10 <<  4);
           break;
@@ -1632,8 +1632,8 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           MODIFY_REG(GPIOE->OSPEEDR, 0b11 <<  8, 0b11 <<  8);
           // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE4
           MODIFY_REG(GPIOE->PUPDR, 0b11 <<  8, 0b00 <<  8);
-          // GPIOE OTYPEDR: Set open drain = 0b1 to pin PE4
-          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  4, 0b1 <<  4);
+          // GPIOE OTYPEDR: Set push-pull output = 0b0 to pin PE4
+          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  4, 0b0 <<  4);
           // GPIOE MODER: Set alternate mode = 0b10 to pins PE4
           MODIFY_REG(GPIOE->MODER, 0b11 <<  8, 0b10 <<  8);
           break;
@@ -1668,8 +1668,8 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           MODIFY_REG(GPIOE->OSPEEDR, 0b11 << 10, 0b11 << 10);
           // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE5
           MODIFY_REG(GPIOE->PUPDR, 0b11 << 10, 0b00 << 10);
-          // GPIOE OTYPEDR: Set open drain = 0b1 to pin PE5
-          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  5, 0b1 <<  5);
+          // GPIOE OTYPEDR: Set push-pull output = 0b0 to pin PE5
+          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  5, 0b0 <<  5);
           // GPIOE MODER: Set alternate mode = 0b10 to pins PE5
           MODIFY_REG(GPIOE->MODER, 0b11 << 10, 0b10 << 10);
           break;
@@ -1704,8 +1704,8 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           MODIFY_REG(GPIOI->OSPEEDR, 0b11 << 12, 0b11 << 12);
           // GPIOI PUPDR: Set no pull-up = 0b00 to pin PE6
           MODIFY_REG(GPIOI->PUPDR, 0b11 << 12, 0b00 << 12);
-          // GPIOI OTYPEDR: Set open drain = 0b1 to pin PE6
-          MODIFY_REG(GPIOI->OTYPER, 0b1 <<  6, 0b1 <<  6);
+          // GPIOI OTYPEDR: Set push-pull output = 0b0 to pin PE6
+          MODIFY_REG(GPIOI->OTYPER, 0b1 <<  6, 0b0 <<  6);
           // GPIOI MODER: Set alternate mode = 0b10 to pins PE6
           MODIFY_REG(GPIOI->MODER, 0b11 << 12, 0b10 << 12);
           break;
