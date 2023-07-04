@@ -33,3 +33,18 @@
 /* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                              */
 /*                                                                                           */
 /*********************************************************************************************/
+
+#ifndef INC_H7SPI_RTOS_H_
+#define INC_H7SPI_RTOS_H_
+
+#include <stdint.h>
+
+#include "h7spi_config.h"
+#include "h7spi_bare.h"
+
+
+
+
+#endif /* INC_H7SPI_RTOS_H_ */
+
+

@@ -33,3 +33,59 @@
 /* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                              */
 /*                                                                                           */
 /*********************************************************************************************/
+
+#include "main.h"
+#include "h7spi_config.h"
+
+#if H7SPI_USE_FREERTOS_IMPL == 1
+
+#include "FreeRTOS.h"
+#include "task.h"
+
+#include "h7spi_rtos.h"
+#include "h7spi_bare.h"
+#include "h7spi_bare_priv.h"
+
+h7spi_spi_ret_code_t h7spi_wait_until_ready(h7spi_periph_t peripheral, uint32_t timeout)
+{
+  uint32_t const timestart = HAL_GetTick();
+
+  // Blocking loop, waiting for the I2C peripheral to become free, to get into error state or to timeout
+  // This version yields control to scheduler if mutex is busy
+  while (HAL_GetTick() - timestart < timeout)
+  {
+    if (h7spi_is_ready(peripheral))
+      return H7SPI_RET_CODE_OK;
+    else
+      taskYIELD();
+   }
+   return H7SPI_RET_CODE_BUSY;
+}
+
+h7spi_spi_ret_code_t h7spi_spi_mutex_lock(h7spi_periph_t peripheral, uint32_t timeout)
+{
+  uint32_t const timestart = HAL_GetTick();
+
+  // This infinite loop blocks the hosting task until the mutex is taken, an error takes place or time is out
+  while (HAL_GetTick() - timestart < timeout)
+  {
+    switch ( h7spi_spi_mutex_lock_impl(peripheral) )
+    {
+      // We got the mutex
+      case H7SPI_RET_CODE_OK:
+        return H7SPI_RET_CODE_OK;
+
+      // This device is not managed by the driver
+      case H7SPI_RET_CODE_UNMANAGED_BY_DRIVER:
+        return H7SPI_RET_CODE_UNMANAGED_BY_DRIVER;
+
+      // We havent't got the mutex (yet)
+      case H7SPI_RET_CODE_BUSY:
+      default:
+        taskYIELD();
+    }
+  }
+  // We timed out
+  return H7SPI_RET_CODE_BUSY;
+}
+#endif

@@ -232,7 +232,7 @@ h7spi_spi_ret_code_t h7spi_clear_error_state(h7spi_periph_t peripheral);
 
 
 h7spi_spi_ret_code_t h7spi_spi_master_shift_nonblocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
-h7spi_spi_ret_code_t h7spi_spi_master_shift            (h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
+h7spi_spi_ret_code_t h7spi_spi_master_shift_blocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
 
 
 #endif // INC_H7SPI_BARE_H_
