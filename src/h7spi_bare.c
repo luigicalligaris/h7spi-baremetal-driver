@@ -556,14 +556,8 @@ h7spi_spi_ret_code_t h7spi_spi_mutex_release(h7spi_periph_t peripheral)
       return H7SPI_RET_CODE_UNMANAGED_BY_DRIVER;
   };
 
-  if (H7SPI_SPI_MUTEX_LOCKED == __LDREXB(p_mutex))
-  {
-    if (0 == __STREXB(H7SPI_SPI_MUTEX_UNLOCKED, p_mutex))
-    {
-      __DMB();// Data Memory Barrier
-      return H7SPI_RET_CODE_OK;
-    }
-  }
+  *p_mutex = H7SPI_SPI_MUTEX_UNLOCKED;
+
   return H7SPI_RET_CODE_OK;
 }
 
@@ -2450,6 +2444,7 @@ void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral)
 
   // Commit to the hardware (CR1, ICR registers) the state changer.
   MODIFY_REG(hardware->CR1, SPI_CR1_CSUSP, instance->cr1_value);
+  READ_REG(hardware->CR1);
 
   // EOT: End of Transfer is set by hardware as soon as a full transfer is completed,
   //      that is when TSIZE number of data have been transmitted and/or received on the SPI.
@@ -2461,9 +2456,11 @@ void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral)
     ifcr |= SPI_IFCR_EOTC;
     // Disable SPI interrupt
     hardware->IER = 0;
+    READ_REG(hardware->IER);
   }
 
   hardware->IFCR = ifcr;
+  READ_REG(hardware->IFCR);
 }
 
 
