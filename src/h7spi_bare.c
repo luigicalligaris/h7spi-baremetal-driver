@@ -158,11 +158,11 @@ h7spi_driver_instance_state_t h7spi_state_spi4 =
   .cr2_value     = 0UL,
   .cfg1_value    = 0UL,
   .cfg2_value    = 0UL,
-  .wr_todo       = 0UL,
-  .wr_done       = 0UL,
+  .ier_value     = 0UL,
+  .shift_size    = 0UL,
+  .shift_tx_cont = 0UL,
+  .shift_rx_cont = 0UL,
   .wr_data       = NULL,
-  .rd_todo       = 0UL,
-  .rd_done       = 0UL,
   .rd_data       = NULL,
   .timestart     = 0UL,
   .timeout       = 0UL
@@ -1595,7 +1595,7 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           // GPIOE OSPEEDR: Set very high speed = 0b11 to pin PE2
           MODIFY_REG(GPIOE->OSPEEDR, 0b11 <<  4, 0b11 <<  4);
           // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE2
-          MODIFY_REG(GPIOE->PUPDR, 0b11 <<  4, 0b00 <<  4);
+          MODIFY_REG(GPIOE->PUPDR, 0b11 <<  4, 0b01 <<  4);
           // GPIOE OTYPEDR: Set push-pull output type = 0b0 to pin PE2
           MODIFY_REG(GPIOE->OTYPER, 0b1 <<  2, 0b0 <<  2);
           // GPIOE MODER: Set alternate mode = 0b10 to pins PE2
@@ -1659,11 +1659,11 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
 
       switch(init_config->pin_miso)
       {
-        case H7SPI_PIN_SPI4_MISO_PE5
+        case H7SPI_PIN_SPI4_MISO_PE5:
           __HAL_RCC_GPIOE_CLK_ENABLE();
 
           // GPIOE AFRL: Set alternate function SPI4 = 5 = 0b0101 (see datasheet chapt 5) to pin PE5  (SPI3_MISO)
-          MODIFY_REG(GPIOE->AFR[0], 0b1111 << 20, 0b0110 << 20);
+          MODIFY_REG(GPIOE->AFR[0], 0b1111 << 20, 0b0101 << 20);
           // GPIOE OSPEEDR: Set very high speed = 0b11 to pin PE5
           MODIFY_REG(GPIOE->OSPEEDR, 0b11 << 10, 0b11 << 10);
           // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE5
@@ -1674,7 +1674,7 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
           MODIFY_REG(GPIOE->MODER, 0b11 << 10, 0b10 << 10);
           break;
 
-        case H7SPI_PIN_SPI4_MISO_PE13
+        case H7SPI_PIN_SPI4_MISO_PE13:
           __HAL_RCC_GPIOE_CLK_ENABLE();
 
           // GPIOE AFRL: Set alternate function SPI4 = 5 = 0b0101 (see datasheet chapt 5) to pin PE13 (SPI3_MISO)
@@ -1696,18 +1696,18 @@ h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_p
       switch(init_config->pin_mosi)
       {
         case H7SPI_PIN_SPI4_MOSI_PE6:
-          __HAL_RCC_GPIOI_CLK_ENABLE();
+        	__HAL_RCC_GPIOE_CLK_ENABLE();
 
-          // GPIOI AFRL: Set alternate function SPI4 = 5 = 0b0101 (see datasheet chapt 5) to pin PE6  (SPI3_MOSI)
-          MODIFY_REG(GPIOI->AFR[0], 0b1111 << 24, 0b0101 << 24);
-          // GPIOI OSPEEDR: Set very high speed = 0b11 to pin PE6
-          MODIFY_REG(GPIOI->OSPEEDR, 0b11 << 12, 0b11 << 12);
-          // GPIOI PUPDR: Set no pull-up = 0b00 to pin PE6
-          MODIFY_REG(GPIOI->PUPDR, 0b11 << 12, 0b00 << 12);
-          // GPIOI OTYPEDR: Set push-pull output = 0b0 to pin PE6
-          MODIFY_REG(GPIOI->OTYPER, 0b1 <<  6, 0b0 <<  6);
-          // GPIOI MODER: Set alternate mode = 0b10 to pins PE6
-          MODIFY_REG(GPIOI->MODER, 0b11 << 12, 0b10 << 12);
+          // GPIOE AFRL: Set alternate function SPI4 = 5 = 0b0101 (see datasheet chapt 5) to pin PE6  (SPI3_MOSI)
+          MODIFY_REG(GPIOE->AFR[0], 0b1111 << 24, 0b0101 << 24);
+          // GPIOE OSPEEDR: Set very high speed = 0b11 to pin PE6
+          MODIFY_REG(GPIOE->OSPEEDR, 0b11 << 12, 0b11 << 12);
+          // GPIOE PUPDR: Set no pull-up = 0b00 to pin PE6
+          MODIFY_REG(GPIOE->PUPDR, 0b11 << 12, 0b00 << 12);
+          // GPIOE OTYPEDR: Set push-pull output = 0b0 to pin PE6
+          MODIFY_REG(GPIOE->OTYPER, 0b1 <<  6, 0b0 <<  6);
+          // GPIOE MODER: Set alternate mode = 0b10 to pins PE6
+          MODIFY_REG(GPIOE->MODER, 0b11 << 12, 0b10 << 12);
           break;
 
         case H7SPI_PIN_SPI4_MOSI_PE14:
@@ -2334,6 +2334,8 @@ void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral)
 
   uint8_t* ptxdr = (uint8_t*) &hardware->TXDR;
 
+  //uint32_t value;
+
   uint32_t ifcr = 0UL;
 
   // SUSP: Master mode suspended
@@ -2380,16 +2382,16 @@ void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral)
   {
     if ( instance->fsm_state == H7SPI_FSM_STATE_SHIFTING )
     {
-      while ( READ_BIT(hardware->SR, SPI_SR_RXP) != 0 )
+      do
       {
         if ( instance->shift_rx_cont < instance->shift_size)
         {
-          instance->rd_data[instance->shift_rx_cont] = (uint8_t) (0x000000FF & READ_REG(hardware->RXDR));
-          instance->shift_rx_cont++;
-        }
-        else
-          break;
-      }
+    	  instance->rd_data[instance->shift_rx_cont] = (uint8_t) (0x000000FF & READ_REG(hardware->RXDR));
+    	  instance->shift_rx_cont++;
+    	}
+    	else
+    	  break;
+      } while(READ_BIT(hardware->SR, SPI_SR_RXP) != 0 );
     }
   }
 
@@ -2417,7 +2419,7 @@ void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral)
   // DXP: Both TXP and RXP are active
   if ( READ_BIT(sr, SPI_SR_DXP) != 0 )
   {
-    // TODO
+    // TODO:
   }
 
   // TXTF: Transmission Transfer Filled
@@ -2495,6 +2497,8 @@ static int h7spi_spi_pre_transaction_check(h7spi_periph_t peripheral, uint32_t t
 
 static int h7spi_spi_master_shift_transaction(h7spi_periph_t peripheral, uint16_t shift_size, uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout)
 {
+
+
   if ( (shift_size == 0UL) || (mi_buf == NULL) || (mo_buf == NULL))
     return H7SPI_RET_CODE_INVALID_ARGS;
 
@@ -2589,30 +2593,27 @@ static int h7spi_spi_master_shift_transaction(h7spi_periph_t peripheral, uint16_
 
     MODIFY_REG(instance->cr2_value, SPI_CR2_TSIZE, (instance->shift_size << SPI_CR2_TSIZE_Pos));
 
-    // Compute the packet size to define FIFO threshold vale
-    // In this driver the data frame will be 8 bits.
+    // Computes the SIZE and SER values
     uint8_t fifo_deph = instance->fifo_deph;
-
     uint32_t tSIZE; // keeps the amount of data packets to be shifted. The data packet is defined by the FIFO's Threshold.
                     // The data packets are composed by data frames.
     uint32_t tSER;  // in the actual shift transaction, defines the amount of data frames which is not enough to complete a packet and reach FIFO's Threshold.
 
-    uint8_t fTHLV;  // keeps FIFO' Threshold value. The size of the packet must not exceed 1/2 of FIFO space.
+    uint8_t fTHLV = 0;  // keeps FIFO' Threshold value. As input/output data buffer and frame are 8 bits so the FIFO threshold is '1' ('0000' in reg.)
     uint8_t max_fifo_th = ( fifo_deph >> 1 ); // Defines maximum number of data frames at single data packet.
+
 
     if ( shift_size > max_fifo_th )
     {
       // The amount of data frames to shift is greater than FIFO Threshold.
       tSIZE = (uint16_t) ( shift_size / max_fifo_th );
       tSER  = (uint16_t) ( shift_size % max_fifo_th );
-      fTHLV = max_fifo_th-1;
     }
     else
     {
       // The amount of data frames to shift is lower than maximum FIFO's Threshold value.
       tSIZE = (uint32_t) shift_size;
       tSER  = (uint32_t) 0;
-      fTHLV = (uint8_t)  (shift_size-1);
     }
 
     // Fixed shift parameter for bits length in a single SPI data frame.
