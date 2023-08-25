@@ -40,34 +40,44 @@
 #include "h7spi_config.h"
 #include "h7spi_bare.h"
 
+#define H7SPI_FIFO_DEPH_SPI2S1 16
+#define H7SPI_FIFO_DEPH_SPI2S2 16
+#define H7SPI_FIFO_DEPH_SPI2S3 16
+#define H7SPI_FIFO_DEPH_SPI4   8
+#define H7SPI_FIFO_DEPH_SPI5   8
+#define H7SPI_FIFO_DEPH_SPI6   8
+
+
 enum {H7SPI_SPI_MUTEX_UNLOCKED = 0, H7SPI_SPI_MUTEX_LOCKED = 1};
 
 typedef struct h7spi_driver_instance_state_t
 {
-  h7spi_i2c_fsm_state_t fsm_state;
+  h7spi_spi_fsm_state_t fsm_state;
 
   void*    spi_base;
+
+  uint8_t const fifo_deph;
 
   uint32_t cr1_value;
   uint32_t cr2_value;
   uint32_t cfg1_value;
   uint32_t cfg2_value;
+  uint32_t ier_value;
 
-  uint32_t wr_todo;
-  uint32_t wr_done;
+  uint32_t shift_size;
+  uint32_t shift_tx_cont;
+  uint32_t shift_rx_cont;
+
   uint8_t* wr_data;
-
-  uint32_t rd_todo;
-  uint32_t rd_done;
   uint8_t* rd_data;
 
   uint32_t timestart;
   uint32_t timeout;
 } h7spi_driver_instance_state_t;
 
-h7spi_i2c_ret_code_t h7spi_i2c_mutex_lock(h7spi_periph_t peripheral, uint32_t timeout);
-h7spi_i2c_ret_code_t h7spi_i2c_mutex_lock_impl(h7spi_periph_t peripheral);
-h7spi_i2c_ret_code_t h7spi_i2c_mutex_release(h7spi_periph_t peripheral);
-h7spi_i2c_ret_code_t h7spi_i2c_mutex_release_fromISR(h7spi_periph_t peripheral);
+h7spi_spi_ret_code_t h7spi_spi_mutex_lock(h7spi_periph_t peripheral, uint32_t timeout);
+h7spi_spi_ret_code_t h7spi_spi_mutex_lock_impl(h7spi_periph_t peripheral);
+h7spi_spi_ret_code_t h7spi_spi_mutex_release(h7spi_periph_t peripheral);
+h7spi_spi_ret_code_t h7spi_spi_mutex_release_fromISR(h7spi_periph_t peripheral);
 
 #endif // INC_H7I2C_BARE_PRIV_H_

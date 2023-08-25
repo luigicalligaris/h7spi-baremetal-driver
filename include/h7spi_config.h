@@ -37,16 +37,40 @@
 #ifndef INC_H7SPI_CONFIG_H_
 #define INC_H7SPI_CONFIG_H_
 
+#include "main.h"
 
-// Use these defines to put the peripheral under the responsibility of this driver.
+
+// Declare the following macros in main.h file to put the peripheral under the responsibility of this driver.
 // You shall mind about collisions with the STM32Cube driver (if you use this driver,
 // the peripheral should be unconfigured in the IOC file).
+
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI1
 #define H7SPI_PERIPH_ENABLE_SPI1 0
+#endif
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI2
 #define H7SPI_PERIPH_ENABLE_SPI2 0
+#endif
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI3
 #define H7SPI_PERIPH_ENABLE_SPI3 0
+#endif
+
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI4
 #define H7SPI_PERIPH_ENABLE_SPI4 0
+#endif
+
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI5
 #define H7SPI_PERIPH_ENABLE_SPI5 0
+#endif
+
+#ifndef H7SPI_PERIPH_ENABLE_SPI6
 #define H7SPI_PERIPH_ENABLE_SPI6 0
+#endif
+
 
 // Do you want to use the FreeRTOS-compatible function implementations?
 #define H7SPI_USE_FREERTOS_IMPL 0
