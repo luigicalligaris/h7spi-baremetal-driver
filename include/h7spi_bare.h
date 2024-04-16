@@ -213,26 +213,27 @@ typedef struct h7spi_periph_init_config_t
 
 
 
-h7spi_spi_ret_code_t h7spi_spi_init(h7spi_periph_t peripheral);
-h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_periph_init_config_t* init_config);
-void h7spi_deinit(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_spi_init(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_spi_init_by_config(h7spi_periph_t peripheral, h7spi_periph_init_config_t* init_config);
+extern void h7spi_deinit(h7spi_periph_t peripheral);
 
-h7spi_spi_ret_code_t h7spi_spi_reset_peripheral_full(h7spi_periph_t peripheral);
-h7spi_spi_ret_code_t h7spi_spi_reset_peripheral_soft(h7spi_periph_t peripheral);
-h7spi_spi_ret_code_t h7spi_spi_reset_driver(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_spi_reset_peripheral_full(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_spi_reset_peripheral_soft(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_spi_reset_driver(h7spi_periph_t peripheral);
 
-int h7spi_spi_is_managed_by_this_driver(h7spi_periph_t peripheral);
+extern int h7spi_spi_is_managed_by_this_driver(h7spi_periph_t peripheral);
 
-int h7spi_is_ready(h7spi_periph_t peripheral);
-h7spi_spi_ret_code_t h7spi_wait_until_ready(h7spi_periph_t peripheral, uint32_t timeout);
+extern int h7spi_is_ready(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_wait_until_ready(h7spi_periph_t peripheral, uint32_t timeout);
 
-int h7spi_is_in_error(h7spi_periph_t peripheral);
-h7spi_spi_fsm_state_t h7spi_get_state(h7spi_periph_t peripheral);
-h7spi_spi_ret_code_t h7spi_clear_error_state(h7spi_periph_t peripheral);
+extern int h7spi_is_in_error(h7spi_periph_t peripheral);
+extern h7spi_spi_fsm_state_t h7spi_get_state(h7spi_periph_t peripheral);
+extern h7spi_spi_ret_code_t h7spi_clear_error_state(h7spi_periph_t peripheral);
 
 
-h7spi_spi_ret_code_t h7spi_spi_master_shift_nonblocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
-h7spi_spi_ret_code_t h7spi_spi_master_shift_blocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
+extern h7spi_spi_ret_code_t h7spi_spi_master_shift_nonblocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
+extern h7spi_spi_ret_code_t h7spi_spi_master_shift_blocking(h7spi_periph_t peripheral, uint16_t shift_size,  uint8_t *mi_buf, uint8_t *mo_buf, uint32_t timeout);
 
+extern void H7SPI_IRQHandler_Impl(h7spi_periph_t peripheral);
 
 #endif // INC_H7SPI_BARE_H_

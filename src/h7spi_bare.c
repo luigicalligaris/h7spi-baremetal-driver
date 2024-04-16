@@ -405,7 +405,8 @@ int h7spi_is_in_error(h7spi_periph_t peripheral)
 
 int h7spi_is_ready(h7spi_periph_t peripheral)
 {
-  switch(h7spi_get_state(peripheral))
+  h7spi_spi_fsm_state_t const state = h7spi_get_state(peripheral);
+  switch(state)
   {
     case H7SPI_FSM_STATE_UNINITIALIZED:
     case H7SPI_FSM_STATE_IDLE:
